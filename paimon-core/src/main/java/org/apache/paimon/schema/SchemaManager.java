@@ -405,15 +405,16 @@ public class SchemaManager implements Serializable {
             targetIndex--;
         }
 
+        if (targetIndex > (newFields.size() - 1)) {
+            targetIndex = newFields.size() - 1;
+        }
+
         moveField(newFields, fieldIndex, targetIndex);
     }
 
     // Utility method to move a field within the list, handling range checks
     private void moveField(List<DataField> newFields, int fromIndex, int toIndex) {
-        if (fromIndex < 0
-                || fromIndex >= newFields.size()
-                || toIndex < 0
-                || toIndex > newFields.size() - 1) {
+        if (fromIndex < 0 || fromIndex >= newFields.size() || toIndex < 0) {
             return;
         }
         DataField fieldToMove = newFields.remove(fromIndex);

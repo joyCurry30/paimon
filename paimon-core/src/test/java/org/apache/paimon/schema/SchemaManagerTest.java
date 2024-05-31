@@ -316,6 +316,9 @@ public class SchemaManagerTest {
         SchemaChange.Move moveAfter = SchemaChange.Move.after("f0", "f1");
         SchemaChange.Move moveBefore = SchemaChange.Move.before("f2", "f1");
 
+        SchemaChange.Move moveBeforeFirstColumn = SchemaChange.Move.before("f2", "f0");
+        SchemaChange.Move moveAfterLastColumn = SchemaChange.Move.after("f0", "f2");
+
         // Test FIRST operation
         manager.applyMove(fields, moveFirst);
         Assertions.assertEquals(
@@ -371,5 +374,31 @@ public class SchemaManagerTest {
         Assertions.assertEquals(
                 2, fields.get(1).id(), "The field id should remain as 2 after moving f2 before f1");
         Assertions.assertEquals("f2", fields.get(1).name(), "f2 should be before f1");
+
+        // Reset fields to initial state
+        fields =
+                new ArrayList<>(
+                        Arrays.asList(
+                                new DataField(0, "f0", DataTypes.INT()),
+                                new DataField(1, "f1", DataTypes.BIGINT()),
+                                new DataField(2, "f2", DataTypes.STRING())));
+
+        // Test move column before first column
+        manager.applyMove(fields, moveBeforeFirstColumn);
+        Assertions.assertEquals(
+                2, fields.get(0).id(), "The field id should remain as 2 after moving f2 before f0");
+
+        // Reset fields to initial state
+        fields =
+                new ArrayList<>(
+                        Arrays.asList(
+                                new DataField(0, "f0", DataTypes.INT()),
+                                new DataField(1, "f1", DataTypes.BIGINT()),
+                                new DataField(2, "f2", DataTypes.STRING())));
+
+        // Test move column after last column
+        manager.applyMove(fields, moveAfterLastColumn);
+        Assertions.assertEquals(
+                0, fields.get(2).id(), "The field id should remain as 0 after moving f0 after f2");
     }
 }
